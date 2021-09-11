@@ -1,0 +1,182 @@
+﻿@model IEnumerable<GCSite.Models.Game>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GameName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Developer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Publisher)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Platform)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReleaseDateUs)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReleaseDateJp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReleaseDateEu)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ThumbnailPath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CoverArtPath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ManualScanPath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ThreeDBoxmodelPath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RetailPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentValueCib)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentValueMo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GameSizeMb)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GamePlayLength)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MinSpecs)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BoxStyle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BoxSize)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MediaType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MediaCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MediaScanPath)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model)
+{
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Developer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Publisher)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Platform)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Genre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReleaseDateUs)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReleaseDateJp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReleaseDateEu)
+            </td>
+            <td>
+                @{
+                    string imgUrl = "";
+                    string imgFileName = "";
+                    if (item.ThumbnailPath != null)
+                    {
+                        string[] splitURL = item.ThumbnailPath.Split('/');
+                        imgFileName = splitURL[splitURL.Length - 1];
+                        imgUrl = @"/image/upload/t_thumb/" + imgFileName;
+                    }
+
+                    if (System.IO.File.Exists(@"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\image\upload\t_thumb\" + imgFileName))
+                    {
+                        <img src="@imgUrl" width="90" height="90">
+                    }
+                  }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CoverArtPath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ManualScanPath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ThreeDBoxmodelPath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RetailPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CurrentValueCib)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CurrentValueMo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameSizeMb)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GamePlayLength)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MinSpecs)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BoxStyle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BoxSize)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MediaType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MediaCount)
+            </td>
+            <td>
+
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

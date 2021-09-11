@@ -1,0 +1,85 @@
+﻿@using System.Net;
+@model IEnumerable<GCSite.Models.GameSearchViewModel>
+
+@{
+    ViewData["Title"] = "Search";
+}
+
+<h1>Search</h1>
+<form asp-controller="game" asp-action="search" method="post">
+    <p>
+        Title: <input type="text" name="SearchString" />
+        <input type="submit" value="Search" />
+    </p>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GameName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Developer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Publisher)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Platform)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReleaseDateUs)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ThumbnailPath)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GameName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Developer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Publisher)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Platform)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre)
+                </td>
+                <td>
+                    @item.ReleaseDateUs?.ToString("d")
+                </td>
+                <td>
+                    @{
+                        string[] splitString = item.ThumbnailPath.Split('/');
+                        string imgUrl = @"/image/upload/t_thumb/" + splitString[splitString.Length - 1];
+                        string localFileName = @"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\image\upload\t_thumb\" + splitString[splitString.Length - 1];
+                        if (System.IO.File.Exists(localFileName))
+                        {
+                            <img src="@imgUrl" width="90" height="90">
+                        }
+                    }
+                    @{
+                        else
+                        {
+                            <img id="@("image"+item.Id)" src="" width="90" height="90">
+                                } }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

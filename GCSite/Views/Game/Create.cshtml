@@ -1,0 +1,140 @@
+﻿@model GCSite.Models.Game
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Game</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="GameName" class="control-label"></label>
+                <input asp-for="GameName" class="form-control" />
+                <span asp-validation-for="GameName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Developer" class="control-label"></label>
+                <input asp-for="Developer" class="form-control" />
+                <span asp-validation-for="Developer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Publisher" class="control-label"></label>
+                <input asp-for="Publisher" class="form-control" />
+                <span asp-validation-for="Publisher" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Platform" class="control-label"></label>
+                <input asp-for="Platform" class="form-control" />
+                <span asp-validation-for="Platform" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Genre" class="control-label"></label>
+                <input asp-for="Genre" class="form-control" />
+                <span asp-validation-for="Genre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReleaseDateUs" class="control-label"></label>
+                <input asp-for="ReleaseDateUs" class="form-control" />
+                <span asp-validation-for="ReleaseDateUs" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReleaseDateJp" class="control-label"></label>
+                <input asp-for="ReleaseDateJp" class="form-control" />
+                <span asp-validation-for="ReleaseDateJp" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReleaseDateEu" class="control-label"></label>
+                <input asp-for="ReleaseDateEu" class="form-control" />
+                <span asp-validation-for="ReleaseDateEu" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ThumbnailPath" class="control-label"></label>
+                <input asp-for="ThumbnailPath" class="form-control" />
+                <span asp-validation-for="ThumbnailPath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CoverArtPath" class="control-label"></label>
+                <input asp-for="CoverArtPath" class="form-control" />
+                <span asp-validation-for="CoverArtPath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ManualScanPath" class="control-label"></label>
+                <input asp-for="ManualScanPath" class="form-control" />
+                <span asp-validation-for="ManualScanPath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ThreeDBoxmodelPath" class="control-label"></label>
+                <input asp-for="ThreeDBoxmodelPath" class="form-control" />
+                <span asp-validation-for="ThreeDBoxmodelPath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RetailPrice" class="control-label"></label>
+                <input asp-for="RetailPrice" class="form-control" />
+                <span asp-validation-for="RetailPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CurrentValueCib" class="control-label"></label>
+                <input asp-for="CurrentValueCib" class="form-control" />
+                <span asp-validation-for="CurrentValueCib" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CurrentValueMo" class="control-label"></label>
+                <input asp-for="CurrentValueMo" class="form-control" />
+                <span asp-validation-for="CurrentValueMo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameSizeMb" class="control-label"></label>
+                <input asp-for="GameSizeMb" class="form-control" />
+                <span asp-validation-for="GameSizeMb" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GamePlayLength" class="control-label"></label>
+                <input asp-for="GamePlayLength" class="form-control" />
+                <span asp-validation-for="GamePlayLength" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MinSpecs" class="control-label"></label>
+                <input asp-for="MinSpecs" class="form-control" />
+                <span asp-validation-for="MinSpecs" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BoxStyle" class="control-label"></label>
+                <input asp-for="BoxStyle" class="form-control" />
+                <span asp-validation-for="BoxStyle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BoxSize" class="control-label"></label>
+                <input asp-for="BoxSize" class="form-control" />
+                <span asp-validation-for="BoxSize" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MediaType" class="control-label"></label>
+                <input asp-for="MediaType" class="form-control" />
+                <span asp-validation-for="MediaType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MediaCount" class="control-label"></label>
+                <input asp-for="MediaCount" class="form-control" />
+                <span asp-validation-for="MediaCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MediaScanPath" class="control-label"></label>
+                <input asp-for="MediaScanPath" class="form-control" />
+                <span asp-validation-for="MediaScanPath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
