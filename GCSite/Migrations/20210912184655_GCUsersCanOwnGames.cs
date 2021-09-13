@@ -3,13 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GCSite.Migrations
 {
-    public partial class AddLoginTable : Migration
+    public partial class GCUsersCanOwnGames : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "GameSearchViewModel");
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -47,6 +44,42 @@ namespace GCSite.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Games",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IGDBId = table.Column<int>(type: "int", nullable: false),
+                    GameName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Developer = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Publisher = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Platform = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Genre = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReleaseDateUs = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ReleaseDateJp = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ReleaseDateEu = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ThumbnailPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CoverArtPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ManualScanPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ThreeDBoxmodelPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RetailPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    CurrentValueCib = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    CurrentValueMo = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    GameSizeMb = table.Column<long>(type: "bigint", nullable: true),
+                    GamePlayLength = table.Column<long>(type: "bigint", nullable: true),
+                    MinSpecs = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BoxStyle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BoxSize = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MediaType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MediaCount = table.Column<int>(type: "int", nullable: true),
+                    MediaScanPath = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Games", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -155,6 +188,63 @@ namespace GCSite.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "GCUsers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
+                    LastLogin = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FirstLogin = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastIP = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    IsCollectionPublic = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GCUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GCUsers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OwnedGame",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GameDataId = table.Column<int>(type: "int", nullable: true),
+                    PurchasePrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CurrentValue = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    NewInBox = table.Column<bool>(type: "bit", nullable: false),
+                    HasManual = table.Column<bool>(type: "bit", nullable: false),
+                    HasBox = table.Column<bool>(type: "bit", nullable: false),
+                    Condition = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
+                    GCUserId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OwnedGame", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OwnedGame_Games_GameDataId",
+                        column: x => x.GameDataId,
+                        principalTable: "Games",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OwnedGame_GCUsers_GCUserId",
+                        column: x => x.GCUserId,
+                        principalTable: "GCUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -193,6 +283,23 @@ namespace GCSite.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GCUsers_UserId",
+                table: "GCUsers",
+                column: "UserId",
+                unique: true,
+                filter: "[UserId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OwnedGame_GameDataId",
+                table: "OwnedGame",
+                column: "GameDataId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OwnedGame_GCUserId",
+                table: "OwnedGame",
+                column: "GCUserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -213,29 +320,19 @@ namespace GCSite.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "OwnedGame");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Games");
 
-            migrationBuilder.CreateTable(
-                name: "GameSearchViewModel",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Developer = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    GameName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Genre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Platform = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Publisher = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ReleaseDateUs = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ThumbnailPath = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GameSearchViewModel", x => x.Id);
-                });
+            migrationBuilder.DropTable(
+                name: "GCUsers");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

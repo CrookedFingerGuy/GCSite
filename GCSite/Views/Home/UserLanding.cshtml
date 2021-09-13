@@ -1,0 +1,21 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ApplicationUser;
+
+
+<h1>
+    @Model.Email
+    <br />
+    @Model.gcUser.LastLogin
+    <br />
+    @Model.gcUser.FirstLogin
+    <br />
+    You have @Model.gcUser.OwnedGames.Count in your collection.
+    <br />
+</h1>
+<form asp-controller="OwnedGames" asp-action="Create" method="get">
+    <p>
+        <input type="submit" value="Add Game" />
+    </p>
+</form>
