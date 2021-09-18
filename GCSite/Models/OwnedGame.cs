@@ -12,6 +12,7 @@ namespace GCSite.Models
         [Key]
         public int Id { get; set; }
         public Game GameData { get; set; }
+        public int GameDataId { get; set; }
         public decimal PurchasePrice { get; set; }
         public decimal CurrentValue { get; set; }
         public bool NewInBox { get; set; }

@@ -14,8 +14,14 @@
     You have @Model.gcUser.OwnedGames.Count in your collection.
     <br />
 </h1>
-<form asp-controller="OwnedGames" asp-action="Create" method="get">
+<form asp-controller="OwnedGames" asp-action="FindGameToAdd" method="post">
     <p>
         <input type="submit" value="Add Game" />
     </p>
 </form>
+
+<p>
+    <div class="btn btn-dark">
+        @Html.ActionLink("Look at Collection", "Index", "OwnedGames")
+    </div>
+</p>

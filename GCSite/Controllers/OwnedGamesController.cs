@@ -13,7 +13,7 @@ namespace GCSite.Controllers
 {
     public class OwnedGamesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;        
 
         public OwnedGamesController(ApplicationDbContext context)
         {
@@ -23,7 +23,10 @@ namespace GCSite.Controllers
         // GET: OwnedGames
         public async Task<IActionResult> Index()
         {
-            return View(await _context.OwnedGame.ToListAsync());
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ApplicationUser user = _context.Users.Include(y => y.gcUser.OwnedGames).ThenInclude(x=>x.GameData).FirstOrDefault(x => x.Id.Equals(userId));
+
+            return View(user.gcUser.OwnedGames);
         }
 
         // GET: OwnedGames/Details/5
@@ -45,8 +48,9 @@ namespace GCSite.Controllers
         }
 
         // GET: OwnedGames/Create
-        public IActionResult Create()
+        public IActionResult Create(int selectedGameId)
         {
+            TempData["selectedItem"] = selectedGameId;
             return View();
         }
 
@@ -62,11 +66,24 @@ namespace GCSite.Controllers
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 ApplicationUser user = _context.Users.Include(y => y.gcUser).FirstOrDefault(x => x.Id.Equals(userId));
                 ownedGame.GCUserId = user.gcUser.Id;
+                ownedGame.GameDataId = int.Parse(TempData["selectedItem"].ToString());
                 _context.Add(ownedGame);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(ownedGame);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> FindGameToAdd(string searchString)
+        {
+            IQueryable<Game> objList;
+            if (!String.IsNullOrEmpty(searchString))
+                objList = _context.Games.Where(s => s.GameName.Contains(searchString));
+            else
+                objList = _context.Games;
+
+            return View(await objList.ToListAsync());
         }
 
         // GET: OwnedGames/Edit/5

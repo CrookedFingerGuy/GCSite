@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Net;
+using X.PagedList.Mvc;
+using X.PagedList;
+using Microsoft.EntityFrameworkCore;
 
 namespace GCSite.Controllers
 {
@@ -23,10 +26,27 @@ namespace GCSite.Controllers
         {
             _db = db;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string currentFilter, string searchString, int? pageNumber)
         {
-            IEnumerable<Game> objList = _db.Games;
-            return View(objList);
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            IQueryable<Game> objList;
+            if (!String.IsNullOrEmpty(searchString))            
+                objList = _db.Games.Where(s => s.GameName.Contains(searchString));
+            else
+                 objList = _db.Games;
+
+            int pageSize = 10;
+            return View(await PaginatedList<Game>.CreateAsync(objList.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         public async Task<IActionResult> Search(string searchString)

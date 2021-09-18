@@ -12,6 +12,9 @@
 <table class="table">
     <thead>
         <tr>
+            <td>
+                Game ID
+            </td>
             <th>
                 @Html.DisplayNameFor(model => model.PurchasePrice)
             </th>
@@ -36,6 +39,26 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @{
+                    string imgUrl = "";
+                    string imgFileName = "";
+                    if (item.GameData.ThumbnailPath != null)
+                    {
+                        string[] splitURL = item.GameData.ThumbnailPath.Split('/');
+                        imgFileName = splitURL[splitURL.Length - 1];
+                        imgUrl = @"/image/upload/t_thumb/" + imgFileName;
+                    }
+
+                    if (System.IO.File.Exists(@"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\image\upload\t_thumb\" + imgFileName))
+                    {
+                        <img src="@imgUrl" width="90" height="90">
+                    }
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem=>item.GameData.GameName)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PurchasePrice)
             </td>

@@ -1,5 +1,77 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model List<GCSite.Models.Game>
+
 @{
+    ViewData["Title"] = "View";
 }
+
+<h1>Index</h1>
+@using (Html.BeginForm())
+{
+    <p>
+        Find by name: @Html.TextBox("SearchString")
+        <input type="submit" value="Search" />
+    </p>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().GameName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Developer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Publisher)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().ReleaseDateUs)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().ThumbnailPath)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                <div class="btn">
+                    @Html.ActionLink(item.Id.ToString(), "Create", new { selectedGameId = item.Id },null)
+                </div>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Developer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Publisher)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReleaseDateUs)
+            </td>
+            <td>
+                @{
+                    string imgUrl = "";
+                    string imgFileName = "";
+                    if (item.ThumbnailPath != null)
+                    {
+                        string[] splitURL = item.ThumbnailPath.Split('/');
+                        imgFileName = splitURL[splitURL.Length - 1];
+                        imgUrl = @"/image/upload/t_thumb/" + imgFileName;
+                    }
+
+                    if (System.IO.File.Exists(@"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\image\upload\t_thumb\" + imgFileName))
+                    {
+                        <img src="@imgUrl" width="90" height="90">
+                    }
+                }
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<br />
