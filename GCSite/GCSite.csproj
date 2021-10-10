@@ -4,10 +4,12 @@
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>28266f38-8359-46df-882b-cc69f6d38739</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
@@ -26,6 +28,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\image\upload\t_thumb\" />
+    <Folder Include="wwwroot\3DModel\" />
   </ItemGroup>
 
 </Project>

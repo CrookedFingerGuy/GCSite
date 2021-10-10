@@ -15,6 +15,9 @@ using GCSite.Models;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace GCSite
 {
@@ -57,8 +60,16 @@ namespace GCSite
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            var provider = new FileExtensionContentTypeProvider();
+            // Add new mappings
+            provider.Mappings[".glb"] = "model/gltf-binary";
 
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ContentTypeProvider = provider
+            });
+
+            //app.UseStaticFiles();
             app.UseRouting();
 
             app.UseAuthentication();
@@ -70,7 +81,7 @@ namespace GCSite
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllers();
                 endpoints.MapRazorPages();
-            });
+            });     
         }
     }
 }

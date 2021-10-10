@@ -3,14 +3,14 @@
 @{
     ViewData["Title"] = "Create";
 }
-
+<script type="module" src="~/js/model-viewer.min.js"></script>
 <h1>Create</h1>
 
 <h4>OwnedGame</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="PurchasePrice" class="control-label"></label>
@@ -43,6 +43,18 @@
                 <span asp-validation-for="Condition" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="PurchaseDate" class="control-label"></label>
+                <input asp-for="PurchaseDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control" />
+                <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModelPath" class="control-label"></label>
+                <input type="file" name="upload" id="test" class="form-control" />
+                <span asp-validation-for="ModelPath" class="text-danger"></span>
+                <model-viewer id="image_upload_preview" src="" ar ar-modes="webxr scene-viewer quick-look" camera-controls environment-image="neutral" shadow-intensity="1" autoplay>
+                </model-viewer>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -52,4 +64,8 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
+<script>
+    test.addEventListener("input", function (e) {
+        image_upload_preview.src = URL.createObjectURL(this.files[0]);
+    });
+</script>

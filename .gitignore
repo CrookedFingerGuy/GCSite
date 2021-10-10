@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 **/image/upload/*
+*.glb

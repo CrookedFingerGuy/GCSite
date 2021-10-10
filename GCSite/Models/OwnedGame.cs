@@ -22,5 +22,8 @@ namespace GCSite.Models
         public string Condition { get; set; }
         public int GCUserId { get; set; }
         public GCUser gcuser { get; set; }
+        [DataType(DataType.Date)]        
+        public DateTime PurchaseDate { get; set; }
+        public string ModelPath { get; set; }
     }
 }
