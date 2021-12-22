@@ -5,12 +5,20 @@
 }
 
 <h1>Search</h1>
-<form asp-controller="game" asp-action="search" method="post">
+<form asp-controller="OwnedGames" asp-action="SearchToAdd" method="post">
     <p>
-        Title: <input type="text" name="SearchString" />
+        Find by name: @Html.TextBox("SearchString")
         <input type="submit" value="Search" />
     </p>
 </form>
+
+@if (Model != null)
+{
+    <div class="btn btn-outline-secondary">
+        @Html.ActionLink("Search on IGDB", "SearchToAdd", "OwnedGames", TempData["searchString"] == null ? "" : new { searchString = TempData["searchString"].ToString() })
+    </div>
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -41,47 +49,47 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                <div class="btn btn-light">
-                    @Html.ActionLink("Add", "Create", new { selectedGameId = item.Id }, null)
-                </div>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GameName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Developer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Publisher)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Platform)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre)
-            </td>
-            <td>
-                @item.ReleaseDateUs?.ToString("d")
-            </td>
-            <td>
-                @{
-                    string[] splitString = item.ThumbnailPath.Split('/');
-                    string imgUrl = @"/image/upload/t_thumb/" + splitString[splitString.Length - 1];
-                    string localFileName = @"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\image\upload\t_thumb\" + splitString[splitString.Length - 1];
-                    if (System.IO.File.Exists(localFileName))
-                    {
-                        <img src="@imgUrl" width="90" height="90">
+            <tr>
+                <td>
+                    <div class="btn btn-light">
+                        @Html.ActionLink("Add", "Create", new { selectedGameId = item.Id }, null)
+                    </div>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GameName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Developer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Publisher)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Platform)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre)
+                </td>
+                <td>
+                    @item.ReleaseDateUs?.ToString("d")
+                </td>
+                <td>
+                    @{
+                        string[] splitString = item.ThumbnailPath.Split('/');
+                        string imgUrl = @"/image/upload/t_thumb/" + splitString[splitString.Length - 1];
+                        string localFileName = @"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\image\upload\t_thumb\" + splitString[splitString.Length - 1];
+                        if (System.IO.File.Exists(localFileName))
+                        {
+                            <img src="@imgUrl" width="90" height="90">
+                        }
                     }
-                }
-                @{
-                    else
-                    {
-                        <img id="@("image"+item.Id)" src="" width="90" height="90">
-                    } }
-            </td>
-        </tr>
+                    @{
+                        else
+                        {
+                            <img id="@("image"+item.Id)" src="" width="90" height="90">
+                        } }
+                </td>
+            </tr>
         }
     </tbody>
 </table>

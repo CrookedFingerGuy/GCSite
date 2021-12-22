@@ -1,0 +1,143 @@
+﻿@model IEnumerable<GCSite.Models.OwnedGame>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<script type="module" src="~/js/model-viewer.min.js"></script>
+
+<style>
+    .modal-dialog {
+        height: 100%
+    }
+
+    .modal-content {
+        height: 80%
+    }
+
+    model-viewer {
+        height: 100%;
+        width: 100%;
+    }
+</style>
+<h1>Index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>
+                Game ID
+            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.PurchasePrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NewInBox)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HasManual)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HasBox)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Condition)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @{
+                        string imgUrl = "";
+                        string imgFileName = "";
+                        if (item.GameData.ThumbnailPath != null)
+                        {
+                            string[] splitURL = item.GameData.ThumbnailPath.Split('/');
+                            imgFileName = splitURL[splitURL.Length - 1];
+                            imgUrl = @"/image/upload/t_thumb/" + imgFileName;
+                        }
+
+                        if (System.IO.File.Exists(@"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\image\upload\t_thumb\" + imgFileName))
+                        {
+                            <img src="@imgUrl" width="90" height="90">
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GameData.GameName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PurchasePrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CurrentValue)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NewInBox)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HasManual)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HasBox)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Condition)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PurchaseDate)
+                </td>
+                <td>
+                    @{
+                        string modalId = "modalModelViewer" + item.Id.ToString();
+                    }
+
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@modalId">
+                        View 3D
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="@modalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">3D Model of @item.GameData.GameName</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    @{
+                                        string modelUrl = "";
+                                        string modelFileName = "";
+                                        if (item.ModelPath != null)
+                                        {
+                                            modelFileName = item.ModelPath;
+                                            modelUrl = @"/3DModel/" + modelFileName; //@"./test.glb";
+                                        }
+
+                                        if (System.IO.File.Exists(@"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\3DModel\" + modelFileName))
+                                        {
+                                            <model-viewer alt="didn't load" src="@modelUrl" ar ar-modes="webxr scene-viewer quick-look" camera-controls environment-image="neutral" shadow-intensity="1" autoplay></model-viewer>
+
+                                        }
+                                    }
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

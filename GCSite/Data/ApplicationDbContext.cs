@@ -18,6 +18,7 @@ namespace GCSite.Data
         public DbSet<Game> Games { get; set; }
         public DbSet<GCUser> GCUsers { get; set; }
         public DbSet<GCSite.Models.OwnedGame> OwnedGame { get; set; }
+        //public DbSet<GCSite.Models.PublicCollectionsViewModel> PublicCollectionsViewModel { get; set; }
 
         //public DbSet<GCSite.Models.GameSearchViewModel> GameSearchViewModel { get; set; }
     }

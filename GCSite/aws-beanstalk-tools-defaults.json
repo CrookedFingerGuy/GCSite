@@ -1,0 +1,20 @@
+
+{
+    "region" : "us-east-1",
+    "configuration" : "Debug",
+    "framework"     : "net5.0",
+    "self-contained" : false,
+    "application"    : "GCSite",
+    "environment"    : "GCSite-prod",
+    "enable-xray"    : false,
+    "enhanced-health-type" : "basic",
+    "additional-options"   : "\"aws:autoscaling:launchconfiguration,SecurityGroups\"=\"sg-815c07c8\";\"aws:ec2:vpc,Subnets\"=\"subnet-8050b1dc\"",
+    "solution-stack"       : "64bit Amazon Linux 2 v2.2.8 running .NET Core",
+    "environment-type"     : "SingleInstance",
+    "cname"                : "gcsite",
+    "instance-type"        : "t1.micro",
+    "key-pair"             : "",
+    "instance-profile"     : "aws-elasticbeanstalk-ec2-role",
+    "service-role"         : "aws-elasticbeanstalk-service-role",
+    "proxy-server"         : "nginx"
+}

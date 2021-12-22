@@ -67,6 +67,35 @@ namespace GCSite.Controllers
             return View();
         }
 
+        public IActionResult PublicCollection()
+        {
+            List<PublicCollectionsViewModel> pcvm = new List<PublicCollectionsViewModel>();
+            PublicCollectionsViewModel tempPcvm;
+            foreach(GCUser gcu in _db.GCUsers.Include(y => y.OwnedGames))
+            {
+                tempPcvm = new PublicCollectionsViewModel();
+                tempPcvm.Id = gcu.UserId;
+                tempPcvm.LastIP = gcu.LastIP;
+                tempPcvm.LastLogin = gcu.LastLogin;
+                tempPcvm.MemberSince = new TimeSpan(DateTime.Now.Ticks - gcu.FirstLogin.Ticks);
+                if (gcu.FirstName != null)
+                    tempPcvm.Name = gcu.FirstName;
+                else
+                    tempPcvm.Name = "Anonymous";
+                tempPcvm.NumberOfGames = gcu.OwnedGames.Count;
+                pcvm.Add(tempPcvm);
+            }
+            return View(pcvm);
+        }
+        
+        public IActionResult PublicCollectionIndex(string id)
+        {
+            ApplicationUser user = _db.Users.Include(y => y.gcUser.OwnedGames).ThenInclude(x => x.GameData).FirstOrDefault(x => x.Id.Equals(id));
+
+            return View(user.gcUser.OwnedGames);
+        }
+
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

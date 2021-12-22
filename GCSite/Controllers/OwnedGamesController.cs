@@ -66,6 +66,7 @@ namespace GCSite.Controllers
         public IActionResult Create(int selectedGameId)
         {
             TempData["selectedItem"] = selectedGameId;
+            TempData["releaseDate"] = _context.Games.Where(x => x.Id == selectedGameId).FirstOrDefault().ReleaseDateUs;
             return View();
         }
 
@@ -211,6 +212,7 @@ namespace GCSite.Controllers
                 var gamId = await _context.Games.FirstOrDefaultAsync(x => x.IGDBId.Equals(gsModel.IGDBId));
                 gsModel.Id = gamId.Id;
             }
+            TempData["searchString"] = searchString;
             return View(objList);
         }
 
@@ -227,6 +229,7 @@ namespace GCSite.Controllers
             {
                 return NotFound();
             }
+            TempData["selectedItem"] = id;
             return View(ownedGame);
         }
 
@@ -235,7 +238,7 @@ namespace GCSite.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PurchasePrice,CurrentValue,NewInBox,HasManual,HasBox,Condition")] OwnedGame ownedGame)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,GCUserId,GameDataId,PurchasePrice,CurrentValue,NewInBox,HasManual,HasBox,Condition,PurchaseDate")] OwnedGame ownedGame,IFormFile upload)
         {
             if (id != ownedGame.Id)
             {
@@ -244,6 +247,18 @@ namespace GCSite.Controllers
 
             if (ModelState.IsValid)
             {
+
+                if (upload != null && upload.Length > 0)
+                {
+                    using (Stream fileStream = new FileStream(@"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\3DModel\" + upload.FileName, FileMode.Create))
+                    {
+                        await upload.CopyToAsync(fileStream);
+                    }
+                    if (System.IO.File.Exists(@"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\3DModel\" + upload.FileName))
+                    {
+                        ownedGame.ModelPath = upload.FileName;
+                    }
+                }            
                 try
                 {
                     _context.Update(ownedGame);
