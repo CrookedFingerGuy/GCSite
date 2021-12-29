@@ -125,7 +125,7 @@
                             imgUrl = @"/image/upload/t_thumb/" + imgFileName;
                         }
 
-                        if (System.IO.File.Exists(@"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\image\upload\t_thumb\" + imgFileName))
+                        //if (System.IO.File.Exists(TempData["localPath"] + imgFileName))
                         {
                             <img src="@imgUrl" width="90" height="90">
                         }

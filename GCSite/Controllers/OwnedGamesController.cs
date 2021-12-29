@@ -19,16 +19,20 @@ using X.PagedList.Mvc;
 using X.PagedList;
 using System.Web;
 using Microsoft.AspNetCore.Http;
+using System.Diagnostics;
+using Microsoft.AspNetCore.Hosting;
 
 namespace GCSite.Controllers
 {
     public class OwnedGamesController : Controller
     {
-        private readonly ApplicationDbContext _context;        
+        private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public OwnedGamesController(ApplicationDbContext context)
+        public OwnedGamesController(ApplicationDbContext context,IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Testing()
         {
@@ -40,7 +44,8 @@ namespace GCSite.Controllers
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             ApplicationUser user = _context.Users.Include(y => y.gcUser.OwnedGames).ThenInclude(x=>x.GameData).FirstOrDefault(x => x.Id.Equals(userId));
-
+            TempData["localPath"] = Helpers.PathAddBackslash(Path.Combine(_webHostEnvironment.WebRootPath, "image", "upload", "t_thumb"));
+            TempData["modelPath"] = Helpers.PathAddBackslash(Path.Combine(_webHostEnvironment.WebRootPath, "3DModel"));
             return View(user.gcUser.OwnedGames);
         }
 
@@ -83,13 +88,14 @@ namespace GCSite.Controllers
                 ApplicationUser user = _context.Users.Include(y => y.gcUser).FirstOrDefault(x => x.Id.Equals(userId));
                 ownedGame.GCUserId = user.gcUser.Id;
                 ownedGame.GameDataId = int.Parse(TempData["selectedItem"].ToString());
+                string path = Helpers.PathAddBackslash(Path.Combine(_webHostEnvironment.WebRootPath, "3DModel"));
                 if(upload!=null&&upload.Length>0)
                 {
-                    using(Stream fileStream=new FileStream(@"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\3DModel\"+upload.FileName,FileMode.Create))
+                    using(Stream fileStream=new FileStream(path + upload.FileName,FileMode.Create))
                     {
                         await upload.CopyToAsync(fileStream);
                     }
-                    if(System.IO.File.Exists(@"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\3DModel\" + upload.FileName))
+                    if(System.IO.File.Exists(path + upload.FileName))
                     {
                         ownedGame.ModelPath = upload.FileName;
                     }
@@ -110,28 +116,31 @@ namespace GCSite.Controllers
             else
                 objList = _context.Games;
             TempData["searchString"] = searchString;
+            TempData["localPath"] = Helpers.PathAddBackslash(Path.Combine(_webHostEnvironment.WebRootPath, "image", "upload", "t_thumb"));
             return View(await objList.ToListAsync());
         }
 
         public async Task<IActionResult> SearchToAdd(string searchString)
         {
             List<GameSearchViewModel> objList = new List<GameSearchViewModel>();
+
+
             if (searchString != "" && searchString != null)
             {
                 var client = new RestClient("https://api.igdb.com/v4/games");
                 client.Timeout = -1;
                 var request = new RestRequest(Method.POST);
                 request.AddHeader("Client-ID", "4bpvax0sj2c2bdnkfbnw8wup0rzspy");
-                request.AddHeader("Authorization", "Bearer " + Environment.GetEnvironmentVariable("IGDBKEY", EnvironmentVariableTarget.User));
+                request.AddHeader("Authorization", "Bearer " + Environment.GetEnvironmentVariable("IGDBKEY", EnvironmentVariableTarget.Process));
                 request.AddHeader("Content-Type", "text/plain");
                 request.AddParameter("text/plain", $"fields name, cover.*,first_release_date,genres.name,platforms.name,involved_companies.*,involved_companies.company.name; where name ~ *\"{searchString}\"*; limit 50;", ParameterType.RequestBody);
                 IRestResponse response = await client.ExecuteAsync(request);
 
                 List<GameRoot> convertedResponse = JsonConvert.DeserializeObject<List<GameRoot>>(response.Content);
 
-
                 GameSearchViewModel tempGame = new GameSearchViewModel();
-
+                
+                if(convertedResponse!=null)
                 foreach (GameRoot g in convertedResponse)
                 {
                     if (g.genres != null
@@ -189,7 +198,9 @@ namespace GCSite.Controllers
                         await _context.AddAsync(temp);
                         string[] splitString = temp.ThumbnailPath.Split('/');
                         string imgUrl = @"/image/upload/t_thumb/" + splitString[splitString.Length - 1];
-                        string localFileName = @"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\image\upload\t_thumb\" + splitString[splitString.Length - 1];
+                        string path = Path.Combine(_webHostEnvironment.WebRootPath, "image", "upload", "t_thumb");
+                        path = Helpers.PathAddBackslash(path);
+                        string localFileName = path + splitString[splitString.Length - 1];
                         if (!System.IO.File.Exists(localFileName))
                         {
                             using (WebClient wc = new WebClient())
@@ -213,6 +224,7 @@ namespace GCSite.Controllers
                 gsModel.Id = gamId.Id;
             }
             TempData["searchString"] = searchString;
+            TempData["localPath"] = Helpers.PathAddBackslash(Path.Combine(_webHostEnvironment.WebRootPath, "image", "upload", "t_thumb"));
             return View(objList);
         }
 
@@ -250,11 +262,13 @@ namespace GCSite.Controllers
 
                 if (upload != null && upload.Length > 0)
                 {
-                    using (Stream fileStream = new FileStream(@"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\3DModel\" + upload.FileName, FileMode.Create))
+                    string path = Path.Combine(_webHostEnvironment.WebRootPath, "3DModel");
+                    path = Helpers.PathAddBackslash(path);
+                    using (Stream fileStream = new FileStream(path + upload.FileName, FileMode.Create))
                     {
                         await upload.CopyToAsync(fileStream);
                     }
-                    if (System.IO.File.Exists(@"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\3DModel\" + upload.FileName))
+                    if (System.IO.File.Exists(path + upload.FileName))
                     {
                         ownedGame.ModelPath = upload.FileName;
                     }

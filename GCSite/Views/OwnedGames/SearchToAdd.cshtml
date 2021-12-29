@@ -77,17 +77,12 @@
                     @{
                         string[] splitString = item.ThumbnailPath.Split('/');
                         string imgUrl = @"/image/upload/t_thumb/" + splitString[splitString.Length - 1];
-                        string localFileName = @"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\image\upload\t_thumb\" + splitString[splitString.Length - 1];
-                        if (System.IO.File.Exists(localFileName))
-                        {
-                            <img src="@imgUrl" width="90" height="90">
-                        }
+                        string localFileName = TempData["localPath"] + splitString[splitString.Length - 1];
+                        //if (System.IO.File.Exists(localFileName))
                     }
-                    @{
-                        else
-                        {
-                            <img id="@("image"+item.Id)" src="" width="90" height="90">
-                        } }
+                            <img src="@imgUrl" width="90" height="90">
+                        
+                               
                 </td>
             </tr>
         }

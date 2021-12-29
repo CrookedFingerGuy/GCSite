@@ -12,7 +12,6 @@ namespace GCSite.Models
     {
         [Key]
         public int Id { get; set; }
-        [MaxLength(450)]
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
         [MaxLength(32)]

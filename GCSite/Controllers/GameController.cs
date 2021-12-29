@@ -15,16 +15,19 @@ using System.Net;
 using X.PagedList.Mvc;
 using X.PagedList;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
 
 namespace GCSite.Controllers
 {
     public class GameController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public GameController(ApplicationDbContext db)
+        public GameController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
         {
             _db = db;
+            _webHostEnvironment = webHostEnvironment;
         }
         public async Task<IActionResult> Index(string currentFilter, string searchString, int? pageNumber)
         {
@@ -46,6 +49,7 @@ namespace GCSite.Controllers
                  objList = _db.Games;
 
             int pageSize = 10;
+            TempData["localPath"] = Helpers.PathAddBackslash(Path.Combine(_webHostEnvironment.WebRootPath, "image", "upload", "t_thumb"));
             return View(await PaginatedList<Game>.CreateAsync(objList.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
@@ -125,7 +129,7 @@ namespace GCSite.Controllers
                         await _db.AddAsync(temp);
                         string[] splitString = temp.ThumbnailPath.Split('/');
                         string imgUrl = @"/image/upload/t_thumb/" + splitString[splitString.Length - 1];
-                        string localFileName = @"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\image\upload\t_thumb\" + splitString[splitString.Length - 1];
+                        string localFileName = Helpers.PathAddBackslash(Path.Combine(_webHostEnvironment.WebRootPath, "image", "upload", "t_thumb")) + splitString[splitString.Length - 1];
                         if (!System.IO.File.Exists(localFileName))
                         {
                             using (WebClient wc = new WebClient())
@@ -142,7 +146,7 @@ namespace GCSite.Controllers
                 }
                 await _db.SaveChangesAsync();
             }
-
+            TempData["localPath"] = Helpers.PathAddBackslash(Path.Combine(_webHostEnvironment.WebRootPath, "image", "upload", "t_thumb"));
             return View(objList);
         }
 
@@ -156,6 +160,7 @@ namespace GCSite.Controllers
         {
             _db.Add(g);
             _db.SaveChanges();
+            TempData["localPath"] = Helpers.PathAddBackslash(Path.Combine(_webHostEnvironment.WebRootPath, "image", "upload", "t_thumb"));
             return RedirectToAction("Index");
         }
     }

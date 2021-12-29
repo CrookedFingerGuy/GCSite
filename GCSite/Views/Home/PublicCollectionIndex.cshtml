@@ -63,7 +63,7 @@
                             imgUrl = @"/image/upload/t_thumb/" + imgFileName;
                         }
 
-                        if (System.IO.File.Exists(@"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\image\upload\t_thumb\" + imgFileName))
+                        //if (System.IO.File.Exists(TempData["localPath"] + imgFileName))
                         {
                             <img src="@imgUrl" width="90" height="90">
                         }
@@ -121,7 +121,7 @@
                                             modelUrl = @"/3DModel/" + modelFileName; //@"./test.glb";
                                         }
 
-                                        if (System.IO.File.Exists(@"C:\Users\Chiz\source\repos\GCSite\GCSite\wwwroot\3DModel\" + modelFileName))
+                                        //if (System.IO.File.Exists(TempData["modelPath"] + modelFileName))
                                         {
                                             <model-viewer alt="didn't load" src="@modelUrl" ar ar-modes="webxr scene-viewer quick-look" camera-controls environment-image="neutral" shadow-intensity="1" autoplay></model-viewer>
 
