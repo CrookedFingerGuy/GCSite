@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using System.IO;
 
 namespace GCSite
@@ -44,10 +45,12 @@ namespace GCSite
 
             services.AddDefaultIdentity<ApplicationUser>(options =>
             {
-                options.User.RequireUniqueEmail = true;
                 options.SignIn.RequireConfirmedAccount = true;
             }).AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
